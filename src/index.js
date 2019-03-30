@@ -1,5 +1,6 @@
 import s_query, { add_to_dom, make_element } from './helpers';
 import add from './add';
+import Promise from './promise';
 
 add_to_dom('hello there! webpack is fun!');
 
@@ -29,35 +30,53 @@ s_query.make_element('h2', 'this is s_query');
 //rejected
 ///////////////////////////////////////////////////////////
 
-var promise = new Promise(function (resolve, reject) {
-    resolve('no really, this is done');
-});
+// var promise = new Promise(function (resolve, reject) {
+//     resolve('no really, this is done');
+// });
 
-promise
-    .then(function (value) {
-        console.log('this is the result of the promise: ', value);
-        return value + ', yes really';
-    })
-    .then(function (monkey) {
-        console.log('this is the 2nd result of the promise: ', monkey);
-        return monkey + ', yes really';
-    })
-    .catch(function (value) {
-        console.log('there was an error, yo: ', value);
-        return value;
-    })
-    .then(function (monkey) {
-        var newPromise = new Promise(function (resolve, reject) {
-            setTimeout(() => {
-                console.log('rejecting 3rd promise');
-                reject(new Error(monkey));
-            }, 5000);
-        });
+// promise
+//     .then(function (value) {
+//         console.log('this is the result of the promise: ', value);
+//         return value + ', yes really';
+//     })
+//     .then(function (monkey) {
+//         console.log('this is the 2nd result of the promise: ', monkey);
+//         return monkey + ', yes really';
+//     })
+//     .catch(function (value) {
+//         console.log('there was an error, yo: ', value);
+//         return value;
+//     })
+//     .then(function (monkey) {
+//         var newPromise = new Promise(function (resolve, reject) {
+//             setTimeout(() => {
+//                 console.log('rejecting 3rd promise');
+//                 reject(new Error(monkey));
+//             }, 5000);
+//         });
 
-        console.log('this is the 3rd result of the promise: ', monkey);
-        return newPromise;
-    })
-    .catch(function (value) {
-        console.log('there was another error, yo: ', value);
-        return value;
-    });
+//         console.log('this is the 3rd result of the promise: ', monkey);
+//         return newPromise;
+//     })
+//     .catch(function (value) {
+//         console.log('there was another error, yo: ', value);
+//         return value;
+//     });
+
+function pause(callback, delay) {
+    return function (callback) {
+        setTimeout(callback, delay);
+    }
+}
+
+function logValue(value) {
+    return function () {
+        console.log(value);
+    }
+}
+
+var promise = new Promise(pause(5000));
+
+promise.then(logValue("it is done"));
+
+
